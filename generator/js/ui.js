@@ -121,7 +121,7 @@ function ui_duplicate_card() {
 }
 
 function ui_select_card_by_index(index) {
-    $("#selected-card").val(index);
+    $(".selected-card-control").val(index);
     ui_update_selected_card();
 }
 
@@ -143,14 +143,16 @@ function ui_delete_card() {
 function ui_update_card_list() {
     $("#total_card_count").text("Deck contains " + card_data.length + " unique cards.");
 
-    $('#selected-card').empty();
+    $('.selected-card-control').empty();
     for (var i = 0; i < card_data.length; ++i) {
         var card = card_data[i];
-        $('#selected-card')
+        $('.selected-card-control')
             .append($("<option></option>")
             .attr("value", i)
             .text(card.title));
     }
+
+    $('#selected-card-list').attr('size', card_data.length);
 
     ui_update_selected_card();
 }
@@ -173,6 +175,12 @@ function ui_save_file() {
     setTimeout(function () { URL.revokeObjectURL(url); }, 500);
 }
 ui_save_file.filename = 'rpg_cards.json';
+
+function ui_update_selected_card_list() {    
+    var index = parseInt($("#selected-card-list").val(), 10);
+    $("#selected-card").val(index);
+    ui_update_selected_card();
+}
 
 function ui_update_selected_card() {
     var card = ui_selected_card();
@@ -400,7 +408,7 @@ function ui_change_card_title() {
     var card = ui_selected_card();
     if (card) {
         card.title = title;
-        $("#selected-card option:selected").text(title);
+        $(".selected-card-control option:selected").text(title);
         ui_render_selected_card();
     }
 }
@@ -662,6 +670,7 @@ $(document).ready(function () {
     $("#button-apply-card-font").click(ui_apply_default_card_font);
 
     $("#selected-card").change(ui_update_selected_card);
+    $("#selected-card-list").change(ui_update_selected_card_list);
 
     $("#card-title").change(ui_change_card_title);
     $("#card-title-size").change(ui_change_card_property);
