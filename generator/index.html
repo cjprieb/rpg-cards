@@ -404,12 +404,6 @@
                             <div class="panel-body">
                                 <div class="form-horizontal" role="form">
                                     <div class="form-group">
-                                        <label for="total_card_count" class="col-sm-2 control-label">Deck</label>
-                                        <div class="col-sm-10">
-                                            <p class="form-control-static" id="total_card_count">Deck contains {{card_count}} unique {{card_plural}}.</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
                                         <div class="col-sm-6">
                                             <button type="button" class="btn btn-danger btn-block" @click="deleteCard" :disabled="!selected_card">Delete card</button>
                                         </div>
@@ -443,20 +437,18 @@
                 </div>
             </div>
             <!--<h3>Card</h3>-->
-            <div class="col-md-12 col-lg-5">
-                <div class="form-horizontal">
+            <div class="col-md-12 col-lg-5 panel panel-default">
+                <div class="form-horizontal panel-heading">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">File</label>
-                        <div class="col-sm-10"><input type="text" readonly class="form-control" :value="save_file.name"/></div>
+                        <div class="col-sm-10"><p class="form-control-static">{{save_file.name}}</p></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Deck</label>
+                        <div class="col-sm-10"><p class="form-control-static">Deck contains {{card_count}} unique {{card_plural}}.</p></div>
                     </div>
                 </div>
-                <div class="form-horizontal" role="form" v-if="selected_card">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-3">
-                            <button type="button" class="btn btn-primary btn-block" @click="duplicateCard">Duplicate card</button>
-                        </div>
-                    </div>
+                <div class="form-horizontal panel-body" role="form" v-if="selected_card">
                     <div class="form-group">
                         <label for="card-title" class="col-sm-2 control-label">Name</label>
                         <div class="col-sm-10">
@@ -464,10 +456,22 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="card-title-size" class="col-sm-2 control-label">Title Font Size</label>
+                        <label for="card-tags" class="col-sm-2 control-label">Tags</label>
                         <div class="col-sm-10">
+                            <input type="text" id="card-tags" class="form-control" placeholder="Tags, comma separated" v-model="selected_tags">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="card-contents" class="col-sm-2 control-label">Contents</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="14" id="card-contents" v-model="selected_content"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="card-title-size" class="col-sm-2 control-label">Title Font Size</label>
+                        <div class="col-sm-4">
                             <select class="form-control" id="card-title-size" v-model="selected_card.title_size">
-                                <option value="">default font</option>
+                                <option value="" default>default font</option>
                                 <option value="16">16pt font</option>
                                 <option value="15">15pt font</option>
                                 <option value="14">14pt font</option>
@@ -477,12 +481,10 @@
                                 <option value="10">10pt font</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="form-group">
                         <label for="card-font-size" class="col-sm-2 control-label">Card Font Size</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-4">
                             <select class="form-control" id="card-font-size" v-model="selected_card.font_size">
-                                <option value="">default font</option>
+                                <option value="" default>default font</option>
                                 <option value="smaller">smaller</option>
                                 <option value="12">12pt font</option>
                                 <option value="11">11pt font</option>
@@ -493,20 +495,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="card-count" class="col-sm-2 control-label">Count</label>
-                        <div class="col-sm-10">
-                            <input type="number" id="card-count" class="form-control" placeholder="Count" v-model="selected_card.count">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="card-tags" class="col-sm-2 control-label">Tags</label>
-                        <div class="col-sm-10">
-                            <input type="text" id="card-tags" class="form-control" placeholder="Tags, comma separated" v-model="selected_tags">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="card-icon" class="col-sm-2 control-label">Icons</label>
-                        <div class="col-sm-10">
+                        <label for="card-icon" class="col-sm-2 control-label">Front Icons</label>
+                        <div class="col-sm-4">
                             <div class="input-group">
                                 <span class="input-group-btn">
                                     <a class="btn btn-default" type="button" :href="icon_search_website" target="_blank" title="Search for game icons">Search</a>
@@ -515,10 +505,8 @@
                                     placeholder="Card icons, space separated" v-model="selected_card.icon">
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
                         <label for="card-icon-back" class="col-sm-2 control-label">Back icon</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-4">
                             <div class="input-group">
                                 <span class="input-group-btn">
                                     <a class="btn btn-default" type="button" :href="icon_search_website" target="_blank" title="Search for game icons">Search</a>
@@ -530,7 +518,7 @@
                     </div>
                     <div class="form-group">
                         <label for="card-color" class="col-sm-2 control-label">Color</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-4">
                             <div class="input-group">
                                 <select id="card_color_selector" class="colorselector-data" v-model="selected_card.color">
                                     <option v-for="color in card_colors" :value="color" :data-color="color">{{color}}</option>
@@ -538,18 +526,20 @@
                                 <input type="text" id="card-color" class="form-control" placeholder="Default color" v-model="selected_card.color">
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
                         <label for="card-background" class="col-sm-2 control-label">Background</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-4">
                             <input type="text" id="card-background" class="form-control"
                                 placeholder="Background image URL" v-model="selected_card.background_image">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="card-contents" class="col-sm-2 control-label">Contents</label>
-                        <div class="col-sm-10">
-                            <textarea class="form-control" rows="14" id="card-contents" v-model="selected_content"></textarea>
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-primary btn-block" @click="duplicateCard">Duplicate card</button>
+                        </div>
+                        <label for="card-count" class="col-sm-2 control-label">Count</label>
+                        <div class="col-sm-4">
+                            <input type="number" id="card-count" class="form-control" placeholder="Count" v-model="selected_card.count">
                         </div>
                     </div>
                 </div>
