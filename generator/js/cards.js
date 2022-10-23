@@ -467,7 +467,7 @@ function add_size_to_style(style, width, height) {
 function card_generate_front(data, options) {
     var color = card_data_color_front(data, options);
     var style_color = card_generate_color_style(color, options);
-    var card_style = add_size_to_style(style_color, options.card_width, options.card_height);
+    var card_style = add_size_to_style(style_color, options.width, options.height);
 
     var result = "";
     result += '<div class="card ' + (options.rounded_corners ? 'rounded-corners' : '') + '" ' + card_style + '>';
@@ -485,8 +485,8 @@ function card_generate_back(data, options) {
     var color = card_data_color_back(data, options);
     var style_color = card_generate_color_style(color, options);
 
-    var width = options.card_width;
-    var height = options.card_height;
+    var width = options.width;
+    var height = options.height;
 
     var card_style = add_size_to_style(style_color, width, height);
 
@@ -531,7 +531,7 @@ function card_generate_back(data, options) {
 
 function card_generate_empty(count, options) {
     var style_color = card_generate_color_style("white");
-    var card_style = add_size_to_style(style_color, options.card_width, options.card_height);
+    var card_style = add_size_to_style(style_color, options.width, options.height);
 
     var result = "";
     result += '<div class="card' + '" ' + card_style + '>';
@@ -574,31 +574,31 @@ function cards_pages_flip_left_right(cards, rows, cols) {
     return result;
 }
 
-function card_pages_add_padding(cards, options) {
-    var cards_per_page = options.page_rows * options.page_columns;
+function card_pages_add_padding(cards, page_options, card_options) {
+    var cards_per_page = page_options.rows * page_options.columns;
     var last_page_cards = cards.length % cards_per_page;
     if (last_page_cards !== 0) {
-        return cards.concat(card_generate_empty(cards_per_page - last_page_cards, options));
+        return cards.concat(card_generate_empty(cards_per_page - last_page_cards, card_options));
     } else {
         return cards;
     }
 }
 
-function card_pages_interleave_cards(front_cards, back_cards, options) {
+function card_pages_interleave_cards(front_cards, back_cards, page_options, card_options) {
     var result = [];
     var i = 0;
     while (i < front_cards.length) {
         result.push(front_cards[i]);
         result.push(back_cards[i]);
-        if (options.page_columns > 2) {
-            result.push(card_generate_empty(options.page_columns - 2, options));
+        if (page_options.columns > 2) {
+            result.push(card_generate_empty(page_options.columns - 2, card_options));
         }
         ++i;
     }
     return result;
 }
 
-function card_pages_interleave_cards_alt(front_cards, back_cards, options) {
+function card_pages_interleave_cards_alt(front_cards, back_cards, page_options, card_options) {
     var result = [];
     var i = 0;
     while (i < front_cards.length) {
@@ -609,19 +609,19 @@ function card_pages_interleave_cards_alt(front_cards, back_cards, options) {
             result.push(front_cards[i]);
             result.push(back_cards[i]);
         }
-        if (options.page_columns > 2) {
-            result.push(card_generate_empty(options.page_columns - 2, options));
+        if (page_options.columns > 2) {
+            result.push(card_generate_empty(page_options.columns - 2, card_options));
         }
         ++i;
     }
     return result;
 }
 
-function card_pages_wrap(pages, options) {
+function card_pages_wrap(pages, page_options, card_options) {
     // force portrait layout then rotate if landscape
-    var orientation = getOrientation(options.page_width, options.page_height);
-    var pageWidth = options.page_width;
-    var pageHeight = options.page_height;
+    var orientation = page_options.orientation;
+    var pageWidth = page_options.width;
+    var pageHeight = page_options.height;
     var parsedPageWidth = parseNumberAndMeasureUnit(pageWidth || "210mm");
     var parsedPageHeight = parseNumberAndMeasureUnit(pageHeight || "297mm");
     /* Chrome has problems with page sizes given in metric units. Make the paper area slightly smaller to work around this. */
@@ -633,17 +633,17 @@ function card_pages_wrap(pages, options) {
     var result = "";
     for (var i = 0; i < pages.length; ++i) {
         var style = 'style="';
-        if ((options.card_arrangement === "doublesided") &&  (i % 2 === 1)) {
-            style += 'background-color:' + options.background_color + ';';
+        if ((page_options.card_arrangement === "doublesided") &&  (i % 2 === 1)) {
+            style += 'background-color:' + card_options.background_color + ';';
         } else {
-            style += 'background-color:' + options.foreground_color + ';';
+            style += 'background-color:' + card_options.foreground_color + ';';
         }
         // style += 'padding-left: calc( (' + (parsedPageWidth.number + parsedPageWidth.mu) + ' - ' + options.card_width + ' * ' + options.page_columns + ' ) / 2);';
         // style += 'padding-right: calc( (' + (parsedPageWidth.number + parsedPageWidth.mu) + ' - ' + options.card_width + ' * ' + options.page_columns + ' ) / 2);';
         style += '"';
         style = add_size_to_style(style, parsedPageWidth.number + parsedPageWidth.mu, parsedPageHeight.number + parsedPageHeight.mu);
         
-        var z = options.page_zoom / 100;
+        var z = page_options.zoom / 100;
         var zoomWidth = parsedPageWidth.number * z;
         var zoomHeight = parsedPageHeight.number * z;
         var zoomStyle = 'style="transform: scale(' + z + ');"';
@@ -658,9 +658,9 @@ function card_pages_wrap(pages, options) {
     return result;
 }
 
-function card_pages_generate_style(options) {
+function card_pages_generate_style(page_options) {
     var size = "a4";
-    switch (options.page_size) {
+    switch (page_options.defined_size) {
         case "A3": size = "A3 portrait"; break;
         case "A4": size = "210mm 297mm"; break;
         case "A5": size = "A5 portrait"; break;
@@ -681,27 +681,26 @@ function card_pages_generate_style(options) {
     return result;
 }
 
-function card_pages_generate_html(card_data, options) {
-    options = options || card_default_options();
-    var rows = options.page_rows || 3;
-    var cols = options.page_columns || 3;
+function card_pages_generate_html(page_options, card_options, card_data) {
+    var rows = page_options.rows || 3;
+    var cols = page_options.columns || 3;
 
     // Generate the HTML for each card
     var front_cards = [];
     var back_cards = [];
     card_data.forEach(function (data) {
-        var count = options.card_count || data.count || 1;
-        var front = card_generate_front(data, options);
-        var back = card_generate_back(data, options);
+        var count = card_options.card_count || data.count || 1;
+        var front = card_generate_front(data, card_options);
+        var back = card_generate_back(data, card_options);
         front_cards = front_cards.concat(card_repeat(front, count));
         back_cards = back_cards.concat(card_repeat(back, count));
     });
 
     var pages = [];
-    if (options.card_arrangement === "doublesided") {
+    if (page_options.card_arrangement === "doublesided") {
         // Add padding cards so that the last page is full of cards
-        front_cards = card_pages_add_padding(front_cards, options);
-        back_cards = card_pages_add_padding(back_cards, options);
+        front_cards = card_pages_add_padding(front_cards, page_options, card_options);
+        back_cards = card_pages_add_padding(back_cards, page_options, card_options);
 
         // Split cards to pages
         var front_pages = card_pages_split(front_cards, rows, cols);
@@ -714,23 +713,23 @@ function card_pages_generate_html(card_data, options) {
 
         // Interleave front and back pages so that we can print double-sided
         pages = card_pages_merge(front_pages, back_pages);
-    } else if (options.card_arrangement === "front_only") {
-        var cards = card_pages_add_padding(front_cards, options);
+    } else if (page_options.card_arrangement === "front_only") {
+        var cards = card_pages_add_padding(front_cards, page_options, card_options);
         pages = card_pages_split(cards, rows, cols);
-    } else if (options.card_arrangement === "side_by_side") {
-        var cards = card_pages_interleave_cards(front_cards, back_cards, options);
-        cards = card_pages_add_padding(cards, options);
+    } else if (page_options.card_arrangement === "side_by_side") {
+        var cards = card_pages_interleave_cards(front_cards, back_cards, page_options, card_options);
+        cards = card_pages_add_padding(cards, page_options, card_options);
         pages = card_pages_split(cards, rows, cols);
-    } else if (options.card_arrangement === "side_by_side_alt") {
-        var cards = card_pages_interleave_cards_alt(front_cards, back_cards, options);
-        cards = card_pages_add_padding(cards, options);
+    } else if (page_options.card_arrangement === "side_by_side_alt") {
+        var cards = card_pages_interleave_cards_alt(front_cards, back_cards, page_options, card_options);
+        cards = card_pages_add_padding(cards, page_options, card_options);
         pages = card_pages_split(cards, rows, cols);
     }
 
     // Wrap all pages in a <page> element and add CSS for the page size
     var result = "";
-    result += card_pages_generate_style(options);
-    result += card_pages_wrap(pages, options);
+    result += card_pages_generate_style(page_options, card_options);
+    result += card_pages_wrap(pages, page_options, card_options);
 
     return result;
 }

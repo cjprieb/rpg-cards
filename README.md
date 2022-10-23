@@ -33,19 +33,25 @@ FAQ
 - The layout of the cards is broken (e.g., cards are placed outside the page), what's wrong?
   - Check your page size, card size, and cards/page settings. If you ask the generator to place 4x4 poker-sized cards on a A4 paper, they won't fit and they will overflow the page.
 
-Building
+Installation
 ========
 
-This project consists almost exclusively of static HTML/CSS/JavaScript files.
+## Building
+
+This project consists almost exclusively of static HTML/CSS/JavaScript files, plus the vue frameowrk
 The only exception are icons, which are copied from the [game-icons](http://game-icons.net) project.
 
 To build this project:
 
 1. Check out this repository
-2. Make sure you have [Node](https://nodejs.org/) installed
-3. Run `npm install`
-4. Run `npm run build`
-5. Open `./generator/index.html` in your browser (or deploy the content of the `./generator` folder to your server)
+1. Make sure you have [Node](https://nodejs.org/) installed
+1. Run `npm install` to load the modules for rpg-cards
+1. Run `npm run build` to build the modules
+
+## Running
+1. Run `npm install http-server -g` to install a global package that can create a local server
+1. Run `http-server -o /generator/index.html` to launch the website
+   - or run `http-server -p 47897` to start the server without opening the browser
 
 
 License

@@ -1,0 +1,37 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "install",
+			"group": "clean",
+			"problemMatcher": [],
+			"label": "npm: install",
+			"detail": "install dependencies from package"
+		},
+		{
+			"type": "npm",
+			"script": "build",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "build dependencies from package"
+		},
+		{
+			"label": "Run server",
+			"type": "shell",
+			"command": "http-server",
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "run server locally"
+		},
+		{
+			"label": "Run server and open website",
+			"type": "shell",
+			"command": "http-server -o /generator/index.html",
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "run server locally and open website"
+		}
+	]
+}

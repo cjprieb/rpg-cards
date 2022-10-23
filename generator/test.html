@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Test Select for RPG cards</title>
+    <meta charset="UTF-8">
+    <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body>
+    <div id="app" style="display:flex; justify-content: center;">
+        <div id="app" style="display:flex;   flex-direction: column;">
+            <div><b>Title: </b>{{selected_card.title}}</div>
+            <div>
+                <select class="form-control" size="12" v-model="selected_index">
+                    <option 
+                        v-for="(card, i) in card_list" 
+                        :value="i"
+                        :selected="i == selected_index">{{card.title}}</option>
+                </select>
+            </div>
+        </div>        
+    </div>
+    <script type="module">
+
+var app = Vue.createApp({
+    data() {
+        var storedCards = JSON.parse(localStorage.getItem("card_data")) || [card_default_data()];
+        console.log("getting data");
+
+        return {
+            selected_index: storedCards.length > 1 ? 1 : null,
+            card_list: storedCards,
+            // selected_card: storedCards.length > 0 ? storedCards[0] : null
+        }
+    },
+    watch: {
+        card_list: {
+            handler() {
+                console.log("card_list changed");
+                // localStorage.setItem("card_data", JSON.stringify(this.card_list));
+                // this.card_count = this.card_list.length;
+            },
+            deep: true
+        },
+    },
+    computed: {
+        selected_card: function() { 
+            if (this.selected_index >= 0 && this.selected_index < this.card_list.length) {
+                let card = this.card_list[this.selected_index];
+                console.log("card selected - ", card);
+                return card;
+            }
+            else {
+                console.log("card selected - null", newValue);
+                return null;
+            }
+        }
+    }
+});
+
+app.mount("#app");
+    </script>
+</body>
+</html>

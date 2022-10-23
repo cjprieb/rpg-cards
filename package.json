@@ -9,7 +9,7 @@
     "promise-streams": "^1.0.1",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.8",
-    "walk": "^2.3.14",
+    "walk": "^2.3.15",
     "yauzl": "^2.10.0"
   },
   "scripts": {
@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/crobi/rpg-cards#readme",
   "dependencies": {
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "vue": "^3.2.41"
   }
 }

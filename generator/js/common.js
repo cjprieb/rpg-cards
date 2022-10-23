@@ -19,6 +19,23 @@ function getOrientation(cssWidth, cssHeight) {
     return orientation;
 }
 
+function getMatchingFormat(selectorId, width, height) {
+    let selector = document.getElementById(selectorId);
+    let len = selector.length;
+    let format = "";
+    let portrait = [width, height].join(',');
+    let landscape = [height, width].join(',');
+    console.log("match portrait", portrait);
+    console.log("match landscape", landscape);
+    for(var i = 0; i < len; i++) {
+        let o = selector.options[i];
+        if (o.value === portrait) { format = portrait; break; }
+        if (o.value === landscape) { format = landscape; break; }
+    }
+    console.log("matching format", format);
+    return format;
+}
+
 function isLandscape(width, height) {
     return getOrientation(width, height) === 'landscape';
 }

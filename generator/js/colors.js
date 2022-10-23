@@ -1,3 +1,5 @@
+
+
 var css_color_names = [
     "Black",
     "Navy",
@@ -142,7 +144,7 @@ var css_color_names = [
 ];
 
 
-var card_colors = {
+export let card_colors = {
     "": "",
     "dimgray": "dimgray",
     "black": "black",
@@ -296,3 +298,18 @@ var card_colors = {
     "Ivory": "Ivory",
     "White": "White",
 };
+
+export function bindColorSelector(selectorId, getOptions, propertyName) {
+    // console.log("applying color selector to %s", selectorId);
+    $(selectorId).colorselector({
+        callback: function (value, color, title) {
+            // console.log("setting color %s to %s", value, propertyName)
+            var options = getOptions();
+            if (options) [propertyName] = value;
+        }
+    });
+    var options = getOptions();
+    if (options) {
+        $(selectorId).colorselector("setColor", getOptions()[propertyName]);
+    }
+}
