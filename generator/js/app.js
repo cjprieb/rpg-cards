@@ -9,6 +9,7 @@ var app = Vue.createApp({
         var storedCardOptions = JSON.parse(localStorage.getItem("card_options"));
         var storedPageOptions = JSON.parse(localStorage.getItem("page_options"));
         var storedCards = JSON.parse(localStorage.getItem("card_data")) || [card_default_data()];
+        var loadedFile = localStorage.getItem("loadedFile") || "rpg_cards.json";
 
         console.log("getting data");
 
@@ -41,7 +42,7 @@ var app = Vue.createApp({
             selected_index: storedCards.length > 0 ? 0 : null,
             card_list: storedCards,
             save_file: {
-                name: "rpg_cards.json",
+                name: loadedFile,
                 url: ""
             },
             icon_search_website: "http://game-icons.net/"
@@ -133,6 +134,9 @@ var app = Vue.createApp({
                 this.card_options.orientation = getOrientation(this.card_options.width, newHeight);
                 this.card_options.defined_size = getMatchingFormat('card-size', this.card_options.width, newHeight);
             }
+        },
+        'save_file.name'(newValue) {
+            localStorage.setItem("loadedFile", newValue);
         }
     },
     computed: {
@@ -141,6 +145,8 @@ var app = Vue.createApp({
         selected_card: function() { 
             if (this.selected_index >= 0 && this.selected_index < this.card_list.length) {
                 let card = this.card_list[this.selected_index];
+                if (!card.title_size) card.title_size = "";
+                if (!card.font_size) card.font_size = "";
                 return card;
             }
             else {
@@ -150,12 +156,16 @@ var app = Vue.createApp({
         selected_tags: {
             get() {
                 let card = this.selected_card;
-                return card && card.tags ? card.tags.join(", ") : "";
+                var x = card && card.tags ? card.tags.join(", ") : "";
+                console.log("getting tags as string: ", x);
+                return x;
             },
             set(newValue) {
                 let card = this.selected_card;
                 if (card) {
-                    card.tags = newValue.split(',').map(function(x) { return x.trim().toLowerCase(); });
+                    var x = newValue.split(',').map(function(x) { return x.trim().toLowerCase(); });
+                    console.log("setting tags as list: ", x);
+                    card.tags = x;
                 }
             }
         },

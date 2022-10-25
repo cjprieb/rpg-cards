@@ -65,9 +65,7 @@
                             <h4 class="panel-title">
                                 <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
                                     aria-expanded="true" aria-controls="collapseOne">
-                                    <!-- PANEL TITLE -->
-                                    File
-                                    <!-- /PANEL TITLE -->
+                                    File: {{save_file.name}}
                                 </a>
                             </h4>
                         </div>
@@ -303,30 +301,8 @@
                                 <!-- PANEL BODY -->
                                 <form role="form" class="form-horizontal">
                                     <div class="form-group">
-                                        <label for="small-icons" class="col-sm-4 control-label">Icon</label>
-                                        <div class="col-sm-8">
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" id="small-icons" v-model="card_options.icon_inline"> Use small front icons
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="default-color" class="col-sm-4 control-label">Color</label>
-                                        <div class="col-sm-8">
-                                            <div class="input-group">
-                                                <select id="default_color_selector" class="colorselector-data" v-model="card_options.default_color">
-                                                    <option v-for="color in card_colors" :value="color" :data-color="color">{{color}}</option>
-                                                </select>
-                                                <input type="text" id="default-color" class="form-control"
-                                                    placeholder="Card color" v-model="card_options.default_color">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="default-icon" class="col-sm-4 control-label">Icon</label>
-                                        <div class="col-sm-8">
+                                        <label for="default-icon" class="col-sm-2 control-label">Icon</label>
+                                        <div class="col-sm-6">
                                             <div class="input-group">
                                                 <span class="input-group-btn">
                                                     <a class="btn btn-default" type="button" :href="icon_search_website" target="_blank" title="Search for game icons">Search</a>
@@ -335,10 +311,41 @@
                                                     placeholder="Icon name" v-model="card_options.default_icon">
                                             </div>
                                         </div>
+                                        <div class="col-sm-4">
+                                            <button type="button" class="btn btn-primary btn-block" @click="applyBackIconToAll" title="Apply icon to back">Apply to back</button>
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="default-title-size" class="col-sm-4 control-label">Title</label>
-                                        <div class="col-sm-8">
+                                        <label for="small-icons" class="col-sm-2 control-label"></label>
+                                        <div class="col-sm-6">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" id="small-icons" v-model="card_options.icon_inline"> Use small icons in front
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <button type="button" class="btn btn-primary btn-block" @click="applyIconToAll" title="Apply icon to front">Apply to front</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="default-color" class="col-sm-2 control-label">Color</label>
+                                        <div class="col-sm-6">
+                                            <div class="input-group">
+                                                <select id="default_color_selector" class="colorselector-data" v-model="card_options.default_color">
+                                                    <option v-for="color in card_colors" :value="color" :data-color="color">{{color}}</option>
+                                                </select>
+                                                <input type="text" id="default-color" class="form-control"
+                                                    placeholder="Card color" v-model="card_options.default_color">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <button type="button" class="btn btn-primary btn-block" @click="applyColorToAll" title="Apply color to all">Apply to all</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="default-title-size" class="col-sm-2 control-label">Title</label>
+                                        <div class="col-sm-6">
                                             <select class="form-control" id="default-title-size" v-model="card_options.default_title_size">
                                                 <option value="16">16pt font</option>
                                                 <option value="15">15pt font</option>
@@ -349,8 +356,13 @@
                                                 <option value="10">10pt font</option>
                                             </select>
                                         </div>
-                                        <label for="default-card-font-size" class="col-sm-4 control-label">Font Size</label>
-                                        <div class="col-sm-8">
+                                        <div class="col-sm-4">
+                                            <button type="button" class="btn btn-primary btn-block" @click="resetTitleFontSizeToAll" title="Reset title font size on all cards">Reset All</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="default-card-font-size" class="col-sm-2 control-label">Content</label>
+                                        <div class="col-sm-6">
                                             <select class="form-control" id="default-card-font-size" v-model="card_options.default_card_font_size">
                                                 <option value="smaller">Smaller</option>
                                                 <option value="inherit">Inherit</option>
@@ -361,26 +373,8 @@
                                                 <option value="8">8px font</option>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-6">
-                                            <button type="button" class="btn btn-primary btn-block" @click="applyColorToAll">Apply color</button>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <button type="button" class="btn btn-primary btn-block" @click="resetTitleFontSizeToAll">Reset title font</button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-6">
-                                            <button type="button" class="btn btn-primary btn-block" @click="applyIconToAll">Apply icon</button>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <button type="button" class="btn btn-primary btn-block" @click="resetCardFontSizeToAll">Reset card font</button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-6">
-                                            <button type="button" class="btn btn-primary btn-block" @click="applyBackIconToAll">Apply back icon</button>
+                                        <div class="col-sm-4">
+                                            <button type="button" class="btn btn-primary btn-block" @click="resetCardFontSizeToAll" title="Reset content font size on all cards">Reset All</button>
                                         </div>
                                     </div>
                                 </form>
@@ -394,9 +388,7 @@
                             <h4 class="panel-title">
                                 <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
                                     href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                    <!-- PANEL TITLE -->
-                                    Card List
-                                    <!-- /PANEL TITLE -->
+                                    Card List: {{card_count}} unique {{card_plural}}
                                 </a>
                             </h4>
                         </div>
@@ -438,16 +430,6 @@
             </div>
             <!--<h3>Card</h3>-->
             <div class="col-md-12 col-lg-5 panel panel-default">
-                <div class="form-horizontal panel-heading">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">File</label>
-                        <div class="col-sm-10"><p class="form-control-static">{{save_file.name}}</p></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Deck</label>
-                        <div class="col-sm-10"><p class="form-control-static">Deck contains {{card_count}} unique {{card_plural}}.</p></div>
-                    </div>
-                </div>
                 <div class="form-horizontal panel-body" role="form" v-if="selected_card">
                     <div class="form-group">
                         <label for="card-title" class="col-sm-2 control-label">Name</label>
@@ -458,7 +440,7 @@
                     <div class="form-group">
                         <label for="card-tags" class="col-sm-2 control-label">Tags</label>
                         <div class="col-sm-10">
-                            <input type="text" id="card-tags" class="form-control" placeholder="Tags, comma separated" v-model="selected_tags">
+                            <input type="text" id="card-tags" class="form-control" placeholder="Tags, comma separated" v-model.lazy="selected_tags">
                         </div>
                     </div>
                     <div class="form-group">

@@ -51,7 +51,7 @@ To build this project:
 ## Running
 1. Run `npm install http-server -g` to install a global package that can create a local server
 1. Run `http-server -o /generator/index.html` to launch the website
-   - or run `http-server -p 47897` to start the server without opening the browser
+   - or run `http-server` to start the server without opening the browser
 
 
 License
