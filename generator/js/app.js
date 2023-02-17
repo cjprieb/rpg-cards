@@ -45,6 +45,10 @@ var app = Vue.createApp({
                 name: loadedFile,
                 url: ""
             },
+            filter: {
+                by_tag: ""
+            },
+            tags: [""],
             icon_search_website: "http://game-icons.net/"
         }
     },
@@ -142,9 +146,24 @@ var app = Vue.createApp({
     computed: {
         card_count: function() { return this.card_list.length; },
         card_plural: function() { return this.card_list.length == 1 ? "card" : "cards"; },
+        filtered_cards: function() {
+            let list = [];
+            let app = this;
+            app.card_list.forEach(function(card) {
+                let tag = app.filter.by_tag.toLowerCase();
+                if (tag == "" || card.tags.includes(tag)) {
+                    list.push(card)
+                }
+            });
+            return list;
+        },
         selected_card: function() { 
-            if (this.selected_index >= 0 && this.selected_index < this.card_list.length) {
-                let card = this.card_list[this.selected_index];
+            let app = this;
+            app.refreshTags();
+
+            let filtered_list = this.filtered_cards;
+            if (this.selected_index >= 0 && this.selected_index < filtered_list.length) {
+                let card = filtered_list[this.selected_index];
                 if (!card.title_size) card.title_size = "";
                 if (!card.font_size) card.font_size = "";
                 return card;
@@ -231,9 +250,9 @@ var app = Vue.createApp({
             app.save_file.url = url;
             if (app.save_file.name) {
                 var link = $("#file-save-link");
-                link.attr("href", url);
-                link[0].click();
-            }        
+            }
+            link.attr("href", url);
+            link[0].click();      
             setTimeout(function () { URL.revokeObjectURL(url); }, 500);
         },
         rotatePage(_) {
@@ -280,6 +299,18 @@ var app = Vue.createApp({
             var index = this.selected_index;
             this.card_list.splice(index, 1);
             this.selected_index = Math.min(index, this.card_list.length - 1);
+        },
+        refreshTags(_) {
+            let app = this;
+            app.tags = [];
+            app.card_list.forEach(function(card) {
+                card.tags.forEach(function(tag) {
+                    if (!app.tags.includes(tag)) {
+                        app.tags.push(tag);
+                    }
+                });
+            });
+            app.tags.sort();
         },
         sortCardsShow(_) {
             $("#sort-modal").modal('show');
@@ -343,7 +374,16 @@ var app = Vue.createApp({
         bindIconSearch("#card-icon", () => app.selected_card, "icon");
         bindIconSearch("#card-icon-back", () => app.selected_card, "icon_back");
 
-        renderSelectedCard(this.card_options, this.selected_card);
+        renderSelectedCard(this.card_options, this.selected_card);        
+            
+        app.card_list.forEach(function(card) {
+            card.tags.forEach(function(tag) {
+                if (!app.tags.includes(tag)) {
+                    app.tags.push(tag);
+                }
+            });
+        });
+        app.tags.sort();
     }
 });
 
