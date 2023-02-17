@@ -302,7 +302,7 @@ var app = Vue.createApp({
         },
         refreshTags(_) {
             let app = this;
-            app.tags = [];
+            app.tags = [""];
             app.card_list.forEach(function(card) {
                 card.tags.forEach(function(tag) {
                     if (!app.tags.includes(tag)) {
@@ -374,16 +374,8 @@ var app = Vue.createApp({
         bindIconSearch("#card-icon", () => app.selected_card, "icon");
         bindIconSearch("#card-icon-back", () => app.selected_card, "icon_back");
 
-        renderSelectedCard(this.card_options, this.selected_card);        
-            
-        app.card_list.forEach(function(card) {
-            card.tags.forEach(function(tag) {
-                if (!app.tags.includes(tag)) {
-                    app.tags.push(tag);
-                }
-            });
-        });
-        app.tags.sort();
+        renderSelectedCard(this.card_options, this.selected_card);
+        app.refreshTags();
     }
 });
 
