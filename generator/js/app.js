@@ -1,7 +1,7 @@
 // import { createApp } from 'vue'
 
 import { bindColorSelector, card_colors } from "./colors.js";
-import { bindIconSearch } from "./icons.js";
+// import { bindIconSearch } from "./icons.js";
 import { generatePage, renderSelectedCard, card_default_data } from "./generate.js";
 
 var app = Vue.createApp({
@@ -199,6 +199,18 @@ var app = Vue.createApp({
                     card.contents = newValue.split('\n');
                 }
             }
+        },
+        selected_back_content: {
+            get() {
+                let card = this.selected_card;
+                return card && card.back_contents ? card.back_contents.join("\n") : "";
+            },
+            set(newValue) {
+                let card = this.selected_card;
+                if (card) {
+                    card.back_contents = newValue.split('\n');
+                }
+            }
         }
     },
     methods: {
@@ -370,9 +382,9 @@ var app = Vue.createApp({
 
         $(".dropdown-colorselector").addClass("input-group-addon color-input-addon");
 
-        bindIconSearch("#default-icon", () => app.card_options, "default_icon");
-        bindIconSearch("#card-icon", () => app.selected_card, "icon");
-        bindIconSearch("#card-icon-back", () => app.selected_card, "icon_back");
+        // bindIconSearch("#default-icon", () => app.card_options, "default_icon");
+        // bindIconSearch("#card-icon", () => app.selected_card, "icon");
+        // bindIconSearch("#card-icon-back", () => app.selected_card, "icon_back");
 
         renderSelectedCard(this.card_options, this.selected_card);
         app.refreshTags();

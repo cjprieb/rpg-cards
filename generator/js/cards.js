@@ -381,7 +381,7 @@ var card_element_generators = {
 // Card generating functions
 // ============================================================================
 
-function card_generate_contents(contents, card_data, options) {
+function card_generate_contents(contents, card_data, options, isFront) {
     var result = "";
    
     var html = contents.map(function (value) {
@@ -395,6 +395,10 @@ function card_generate_contents(contents, card_data, options) {
             return card_element_unknown(element_params, card_data, options);
         }
     }).join("\n");
+
+    if (card_data.include_text_on_back && isFront) {
+        html += "\n" + card_element_right("→", card_data, options);
+    }
 
     var tagNames = ['icon'];
 
@@ -486,58 +490,82 @@ function card_generate_front(data, options) {
     result += card_element_title(data, options);
     result += card_element_icon(data, options);
     result += '</div>';
-    result += card_generate_contents(data.contents, data, options);
+    result += card_generate_contents(data.contents, data, options, true);
+    result += '</div>';
+
+    return result;
+}
+
+function card_generate_back_text(data, options) {
+    var color = card_data_color_front(data, options);
+    var style_color = card_generate_color_style(color, options);
+    var card_style = add_size_to_style(style_color, options.width, options.height);
+
+    var result = "";
+    result += '<div class="card ' + (options.rounded_corners ? 'rounded-corners' : '') + '" ' + card_style + '>';
+    result += '<div class="card-header">';
+    result += card_element_title(data, options);
+    result += card_element_icon(data, options);
+    result += '</div>';
+    result += card_generate_contents(data.back_contents ? data.back_contents : [], data, options, false);
     result += '</div>';
 
     return result;
 }
 
 function card_generate_back(data, options) {
-    var color = card_data_color_back(data, options);
-    var style_color = card_generate_color_style(color, options);
-
-    var width = options.width;
-    var height = options.height;
-
-    var card_style = add_size_to_style(style_color, width, height);
-
-    var $tmpCardContainer = $('<div style="position:absolute;visibility:hidden;pointer-events:none;"></div>');
-    var $tmpCard = $('<div class="card" ' + card_style + '><div class="card-back"><div class="card-back-inner"><div class="card-back-icon"></div></div></div></div>');
-    $('#preview-container').append($tmpCardContainer.append($tmpCard));
-    
-    var $tmpCardInner = $tmpCard.find('.card-back-inner');
-    var innerWidth = $tmpCardInner.width();
-    var innerHeight = $tmpCardInner.height();
-    var iconSize = Math.min(innerWidth, innerHeight) / 2 + 'px';
-    $tmpCard.remove();
-
-    var icon_style = add_size_to_style(style_color, iconSize, iconSize);
-
-	var url = data.background_image;
-	var background_style = "";
-	if (url)
-	{
-		background_style = 'style = "background-image: url(&quot;' + url + '&quot;); background-size: contain; background-position: center; background-repeat: no-repeat;"';
-	}
-	else
-	{
-		background_style = card_generate_color_gradient_style(color, options);
+    console.log("data.include_text_on_back", data.include_text_on_back);
+    if (data.include_text_on_back) {        
+        return card_generate_back_text(data, options);
     }
-	var icon = card_data_icon_back(data, options);
+    else 
+    {
+        var color = card_data_color_back(data, options);
+        var style_color = card_generate_color_style(color, options);
 
-    var result = "";
-    result += '<div class="card' + ' ' + (options.rounded_corners ? 'rounded-corners' : '') + '" ' + card_style + '>';
-    result += '  <div class="card-back" ' + background_style + '>';
-	if (!url)
-	{
-		result += '    <div class="card-back-inner">';
-		result += '      <div class="card-back-icon icon-' + icon + '" ' + icon_style + '></div>';
-		result += '    </div>';
-	}
-    result += '  </div>';
-    result += '</div>';
+        var width = options.width;
+        var height = options.height;
 
-    return result;
+        var card_style = add_size_to_style(style_color, width, height);
+
+        var $tmpCardContainer = $('<div style="position:absolute;visibility:hidden;pointer-events:none;"></div>');
+        var $tmpCard = $('<div class="card" ' + card_style + '><div class="card-back"><div class="card-back-inner"><div class="card-back-icon"></div></div></div></div>');
+        $('#preview-container').append($tmpCardContainer.append($tmpCard));
+        
+        var $tmpCardInner = $tmpCard.find('.card-back-inner');
+        var innerWidth = $tmpCardInner.width();
+        var innerHeight = $tmpCardInner.height();
+        var iconSize = Math.min(innerWidth, innerHeight) / 2 + 'px';
+        $tmpCard.remove();
+
+        var icon_style = add_size_to_style(style_color, iconSize, iconSize);
+
+        var url = data.background_image;
+        var background_style = "";
+        if (url)
+        {
+            background_style = 'style = "background-image: url(&quot;' + url + '&quot;); background-size: contain; background-position: center; background-repeat: no-repeat;"';
+        }
+        else
+        {
+            background_style = card_generate_color_gradient_style(color, options);
+        }
+        var icon = card_data_icon_back(data, options);
+
+        var result = "";
+        result += '<div class="card' + ' ' + (options.rounded_corners ? 'rounded-corners' : '') + '" ' + card_style + '>';
+        result += '  <div class="card-back" ' + background_style + '>';
+        if (!url)
+        {
+            result += '    <div class="card-back-inner">';
+            result += '      <div class="card-back-icon icon-' + icon + '" ' + icon_style + '></div>';
+            result += '    </div>';
+        }
+        result += '  </div>';
+        result += '</div>';
+
+        return result;
+    }
 }
 
 function card_generate_empty(count, options) {

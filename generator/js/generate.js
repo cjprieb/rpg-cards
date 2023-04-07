@@ -27,6 +27,7 @@ export function generatePage(page_options, card_options, card_data) {
 export function renderSelectedCard(card_options, card_data) {
     $('#preview-container').empty();
     if (card_data) {
+        console.log("testtesttest");
         var front = card_generate_front(card_data, card_options);
         var back = card_generate_back(card_data, card_options);
         $('#preview-container').html(front + "\n" + back);
@@ -40,6 +41,8 @@ export function card_default_data() {
         contents: [],
         tags: [],
         font_size: "",
-        title_size: ""
+        title_size: "",
+        include_text_on_back: false,
+        back_contents: [],
     };
 }
