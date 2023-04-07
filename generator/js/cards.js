@@ -397,6 +397,7 @@ function card_generate_contents(contents, card_data, options, isFront) {
     }).join("\n");
 
     if (card_data.include_text_on_back && isFront) {
+        html += "\n" + card_element_fill("", card_data, options);
         html += "\n" + card_element_right("→", card_data, options);
     }
 
