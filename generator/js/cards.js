@@ -206,6 +206,18 @@ function card_element_description(params, card_data, options) {
     return result;
 }
 
+function card_element_columns(params, card_data, options) {
+    var element_class = card_element_class(card_data, options);
+
+    var result = "";
+    result += '<div class="' + element_class + ' card-columns">';
+    params.forEach(element => {        
+        result += '   <div class="card-p card-description-text">' + element + '</div>';
+    });
+    result += '</div>';
+    return result;
+}
+
 function card_element_text(params, card_data, options) {
     var element_class = card_element_class(card_data, options);
 
@@ -328,6 +340,14 @@ function card_element_bullet(params, card_data, options) {
     return result;
 }
 
+function card_element_bullet_boxes(params, card_data, options) {
+    var result = "";
+    result += '<ul class="card-element card-bullet-line">';
+    result += '   <li class="card-bullet">' + card_element_boxes(params, card_data, options) + '</li>';
+    result += '</ul>';
+    return result;
+}
+
 function card_element_section(params, card_data, options) {
     var color = card_data_color_front(card_data, options);
     var section = params[0] || "";
@@ -374,7 +394,9 @@ var card_element_generators = {
     section: card_element_section,
     disabled: card_element_empty,
     picture: card_element_picture,
-    icon: card_element_inline_icon
+    icon: card_element_inline_icon,
+    columns: card_element_columns,
+    bulletboxes: card_element_bullet_boxes
 };
 
 // ============================================================================
@@ -515,9 +537,11 @@ function card_generate_back_text(data, options) {
 }
 
 function card_generate_back(data, options) {
-    console.log("data.include_text_on_back", data.include_text_on_back);
     if (data.include_text_on_back) {        
         return card_generate_back_text(data, options);
+    }
+    else if (data.single_sided) {
+        return card_generate_empty(1, options);
     }
     else 
     {

@@ -43,6 +43,7 @@ export function card_default_data() {
         font_size: "",
         title_size: "",
         include_text_on_back: false,
+        single_sided: false,
         back_contents: [],
     };
 }

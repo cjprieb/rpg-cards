@@ -240,6 +240,14 @@
     display: inline;
 }
 
+.card-columns {
+    display: flex;
+}
+
+.card-columns .card-description-text {
+    flex-grow: 1;
+}
+
 .card-ruler {
     width: 100%;
     height: 1.0mm;
