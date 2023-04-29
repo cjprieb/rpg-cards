@@ -244,8 +244,8 @@
     display: flex;
 }
 
-.card-columns .card-description-text {
-    flex-grow: 1;
+.card-columns .card-column-item {
+    flex: 1;
 }
 
 .card-ruler {

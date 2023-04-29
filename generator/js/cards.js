@@ -206,6 +206,35 @@ function card_element_description(params, card_data, options) {
     return result;
 }
 
+function card_element_feature_action(params, card_data, options) {
+    var element_class = card_element_class(card_data, options);
+
+    var result = "";
+    result += '<div class="' + element_class + '">';
+    result += '   <h4 class="card-description-name">' + params[0] + '</h4>';
+    result += '   <p class="card-p card-description-text"><i>' + params[1] + ':</i> ' + params[2] + '</p>';
+    result += '</div>';
+    return result;
+}
+
+function card_element_property_columns(params, card_data, options) {
+    var element_class = card_size_class(card_data, options);
+
+    var result = "";
+    result += '<div class="card-element card-property-line card-columns ' + element_class + '">';
+    for (let i = 0; i < params.length; i++) {
+        result += '   <div class="card-column-item">'
+        result += '      <h4 class="card-property-name">' + params[i] + '</h4>';
+        i++;
+        if (i < params.length) {
+            result += '      <p class="card-p card-property-text">' + params[i] + '</p>';
+        }
+        result += '   </div>';        
+    }
+    result += '</div>';
+    return result;
+}
+
 function card_element_columns(params, card_data, options) {
     var element_class = card_element_class(card_data, options);
 
@@ -396,7 +425,9 @@ var card_element_generators = {
     picture: card_element_picture,
     icon: card_element_inline_icon,
     columns: card_element_columns,
-    bulletboxes: card_element_bullet_boxes
+    bulletboxes: card_element_bullet_boxes,
+    featureaction: card_element_feature_action,
+    propertycolumns: card_element_property_columns
 };
 
 // ============================================================================
