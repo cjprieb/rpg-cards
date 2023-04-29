@@ -115,7 +115,7 @@ function generateJS(src, dest) {
             }
             else {
                 const imageExtensions = [".svg", ".png"];
-                const content = "var icon_names = [\n" + files
+                const content = "export var icon_names = [\n" + files
                     .filter(fileName => imageExtensions.find(ext => ext === path.extname(fileName)))
                     .map(name => `    "${path.basename(name, path.extname(name))}"`)
                     .join(",\n") + "\n]";
