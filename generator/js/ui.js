@@ -7,6 +7,7 @@ export function bindIconSearch(selectorId, getOptions, propertyName) {
         items: 'all',
         render: function (items) {
           var that = this;
+          console.log("this/that", that);
 
           items = $(items).map(function (i, item) {
             i = $(that.options.item).data('value', item);
@@ -21,6 +22,14 @@ export function bindIconSearch(selectorId, getOptions, propertyName) {
           }
           this.$menu.html(items);
           return this;
+        },
+        select: function() {
+          var val = this.$menu.find('.active').data('value');
+          if(this.autoSelect || val) {
+            var options = getOptions();
+            options[propertyName] = val;
+          }
+          return this.hide();
         }
     });
 }

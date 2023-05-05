@@ -176,14 +176,14 @@ var app = Vue.createApp({
             get() {
                 let card = this.selected_card;
                 var x = card && card.tags ? card.tags.join(", ") : "";
-                console.log("getting tags as string: ", x);
+                // console.log("getting tags as string: ", x);
                 return x;
             },
             set(newValue) {
                 let card = this.selected_card;
                 if (card) {
                     var x = newValue.split(',').map(function(x) { return x.trim().toLowerCase(); });
-                    console.log("setting tags as list: ", x);
+                    // console.log("setting tags as list: ", x);
                     card.tags = x;
                 }
             }
