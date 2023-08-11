@@ -1,3 +1,31 @@
 .game-icon {    
     line-height: normal;
 }
+
+pre .keyword {
+    color: purple;
+    font-weight: bold;
+}
+
+pre .string {
+    color: maroon;
+}
+
+pre .number {
+}
+
+pre .operator {
+    color: blue;
+}
+
+pre .variable {
+    color: navy;
+}
+
+pre .optional {
+    font-style: italic;
+}
+
+pre .required {
+    font-weight: bold;
+}

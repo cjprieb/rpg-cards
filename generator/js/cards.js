@@ -427,6 +427,7 @@ var card_element_generators = {
     columns: card_element_columns,
     bulletboxes: card_element_bullet_boxes,
     featureaction: card_element_feature_action,
+    action: card_element_feature_action,
     propertycolumns: card_element_property_columns
 };
 
