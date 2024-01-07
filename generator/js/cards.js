@@ -95,9 +95,15 @@ function card_size_class(card_data, options) {
 // Card element generating functions
 // ============================================================================
 
-function card_element_title(card_data, options) {
+function card_element_title(card_data, options, isBack) {
     var title = card_data.title || "";
+    if (isBack && card_data.back_title && card_data.back_title.length > 0) {
+        title = card_data.back_title;
+    }
     var title_size = card_data.title_size || options.default_title_size || 'normal';
+    if (isBack && card_data.back_title_size) {
+        title_size = card_data.back_title_size;
+    }
     return '<div class="card-title card-title-' + title_size + '">' + title + '</div>';
 }
 
@@ -542,7 +548,7 @@ function card_generate_front(data, options) {
     var result = "";
     result += '<div class="card ' + (options.rounded_corners ? 'rounded-corners' : '') + '" ' + card_style + '>';
     result += '<div class="card-header">';
-    result += card_element_title(data, options);
+    result += card_element_title(data, options, false);
     result += card_element_icon(data, options);
     result += '</div>';
     result += card_generate_contents(data.contents, data, options, true);
@@ -559,7 +565,7 @@ function card_generate_back_text(data, options) {
     var result = "";
     result += '<div class="card ' + (options.rounded_corners ? 'rounded-corners' : '') + '" ' + card_style + '>';
     result += '<div class="card-header">';
-    result += card_element_title(data, options);
+    result += card_element_title(data, options, true);
     result += card_element_icon(data, options);
     result += '</div>';
     result += card_generate_contents(data.back_contents ? data.back_contents : [], data, options, false);
