@@ -87,7 +87,7 @@ function card_element_class(card_data, options) {
 }
 
 function card_size_class(card_data, options) {    
-    var card_font_size = card_data.card_font_size || options.default_card_font_size || '';
+    var card_font_size = card_data.font_size || options.default_card_font_size || '';
     return (card_font_size != '' && card_font_size != "inherit") ? ' card-font-size-' + card_font_size : '';
 }
 
