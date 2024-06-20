@@ -8,8 +8,24 @@ var app = Vue.createApp({
     data() {
         var storedCardOptions = JSON.parse(localStorage.getItem("card_options"));
         var storedPageOptions = JSON.parse(localStorage.getItem("page_options"));
-        var storedCards = JSON.parse(localStorage.getItem("card_data")) || [card_default_data()];
+        var storedCards = JSON.parse(localStorage.getItem("card_data"));
+        var defaultCards = card_default_data();
         var loadedFile = localStorage.getItem("loadedFile") || "rpg_cards.json";
+
+        if (storedCards && !Array.isArray (storedCards)) {
+            if (storedCards.card_options) {
+                storedCardOptions = storedCards.card_options;
+            }
+            if (storedCards.page_options) {
+                storedPageOptions = storedCards.page_options;
+            }
+            if (storedCards.cards) {
+                storedCards = storedCards.cards
+            }
+            else {
+                storedCards = defaultCards
+            }
+        }
 
         console.log("getting data");
 
@@ -233,7 +249,22 @@ var app = Vue.createApp({
             for (var i = 0, f; f = files[i]; i++) {
                 var reader = new FileReader();
                 reader.onload = function (_) {
-                    let newCards = JSON.parse(this.result);
+                    let data = JSON.parse(this.result);
+                    let newCards = []
+                    if (Array.isArray(data)) {
+                        newCards = data;
+                    }
+                    else {
+                        if (data.card_options) {
+                            app.card_options = data.card_options;
+                        }
+                        if (data.page_options) {
+                            app.page_options = data.page_options;
+                        }
+                        if (data.cards) {
+                            newCards = storedCards.cards
+                        }
+                    }
                     newCards.forEach(card => app.card_list.push(card));
                 };
                 app.save_file.name = f.name;
@@ -252,19 +283,27 @@ var app = Vue.createApp({
             $("#help-modal").modal('show');
         },
         saveToFile(_) {
+            // console.log("saveToFile");
             let app = this;
-            let cards = []
-            let str = JSON.stringify(app.card_list, null, "  ");
+            let saveData = {
+                card_options: app.card_options,
+                page_options: app.page_options,
+                cards: app.card_list,
+            };
+            let str = JSON.stringify(saveData, null, "  ");
+            // console.log("initializing blob");
             let parts = [str];
-            // console.log("parts", parts);
             let blob = new Blob(parts, { type: 'application/json' });
+            // console.log("blob", blob);
             let url = URL.createObjectURL(blob);
+            // console.log("url", url);
             app.save_file.url = url;
             if (app.save_file.name) {
                 var link = $("#file-save-link");
             }
             link.attr("href", url);
             link[0].click();      
+            // console.log("saved?");
             setTimeout(function () { URL.revokeObjectURL(url); }, 500);
         },
         rotatePage(_) {
