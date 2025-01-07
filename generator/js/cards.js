@@ -223,6 +223,17 @@ function card_element_feature_action(params, card_data, options) {
     return result;
 }
 
+function card_element_pf_action(params, card_data, options) {
+    var element_class = card_element_class(card_data, options);
+
+    var result = "";
+    result += '<div class="' + element_class + '">';
+    result += '   <h4 class="card-description-name"><span class="pf">' + params[0] + '</span> ' + params[1] + '</h4>';
+    result += '   <p class="card-p card-description-text">' + params[2] + '</p>';
+    result += '</div>';
+    return result;
+}
+
 function card_element_property_columns(params, card_data, options) {
     var element_class = card_size_class(card_data, options);
 
@@ -434,7 +445,8 @@ var card_element_generators = {
     bulletboxes: card_element_bullet_boxes,
     featureaction: card_element_feature_action,
     action: card_element_feature_action,
-    propertycolumns: card_element_property_columns
+    propertycolumns: card_element_property_columns,
+    pf_action: card_element_pf_action,
 };
 
 // ============================================================================
