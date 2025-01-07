@@ -55,8 +55,8 @@ var app = Vue.createApp({
                 zoom: "100",
             },
             card_colors: card_colors,
-            selected_index: storedCards.length > 0 ? 0 : null,
-            card_list: storedCards,
+            selected_index: (storedCards?.length ?? 0) > 0 ? 0 : null,
+            card_list: storedCards ?? [],
             save_file: {
                 name: loadedFile,
                 url: ""
@@ -84,7 +84,7 @@ var app = Vue.createApp({
         },
         card_list: {
             handler() {
-                // console.log("card_list changed");
+                console.log("card_list changed");
                 // renderSelectedCard(this.card_options, this.selected_card);
                 localStorage.setItem("card_data", JSON.stringify(this.card_list));
                 // this.card_count = this.card_list.length;/
@@ -165,9 +165,11 @@ var app = Vue.createApp({
         filtered_cards: function() {
             let list = [];
             let app = this;
+            let tag = app.filter.by_tag.toLowerCase();
+            // console.log("by tag: ", tag);
             app.card_list.forEach(function(card) {
-                let tag = app.filter.by_tag.toLowerCase();
                 if (tag == "" || card.tags.includes(tag)) {
+                    // console.log("adding card", card.title);
                     list.push(card)
                 }
             });
@@ -242,6 +244,8 @@ var app = Vue.createApp({
             if (shouldReplace) {
                 this.card_list = [];
             }
+
+            this.filter.by_tag = "";
             
             let app = this;
             let refKey = $(event.target).attr("id");
@@ -252,20 +256,40 @@ var app = Vue.createApp({
                     let data = JSON.parse(this.result);
                     let newCards = []
                     if (Array.isArray(data)) {
+                        // console.log("data is an array");
                         newCards = data;
                     }
                     else {
                         if (data.card_options) {
-                            app.card_options = data.card_options;
+                            // app.card_options = data.card_options;
+                            app.card_options.height = data.card_options.height;
+                            app.card_options.width = data.card_options.width;
+                            app.card_options.defined_size = data.card_options.defined_size;
+                            app.card_options.foreground_color = data.card_options.foreground_color;
+                            app.card_options.background_color = data.card_options.background_color;
+                            app.card_options.default_color = data.card_options.default_color;
+                            app.card_options.default_icon = data.card_options.default_icon;
+                            app.card_options.default_title_size = data.card_options.default_title_size;
+                            app.card_options.default_card_font_size = data.card_options.default_card_font_size;
+                            app.card_options.icon_inline = data.card_options.icon_inline;
+                            app.card_options.rounded_corners = data.card_options.rounded_corners;
                         }
                         if (data.page_options) {
-                            app.page_options = data.page_options;
+                            // app.page_options = data.page_options;                            
+                            app.page_options.height = data.page_options.height;
+                            app.page_options.width = data.page_options.width;
+                            app.page_options.defined_size = data.page_options.defined_size;
+                            app.page_options.card_arrangement = data.page_options.card_arrangement;
+                            app.page_options.rows = data.page_options.rows;
+                            app.page_options.columns = data.page_options.columns;
+                            app.page_options.zoom = data.page_options.zoom;
                         }
                         if (data.cards) {
-                            newCards = storedCards.cards
+                            newCards = data.cards
                         }
                     }
                     newCards.forEach(card => app.card_list.push(card));
+                    // console.log("pushing cards into app", app.card_list);
                 };
                 app.save_file.name = f.name;
                 reader.readAsText(f);
