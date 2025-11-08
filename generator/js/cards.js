@@ -304,6 +304,62 @@ function card_element_right(params, card_data, options) {
     return result;
 }
 
+function card_element_dhthresholds(params, card_data, options) {
+    var stats = [];
+    for (var i = 0; i < 2; ++i) {
+        stats[i] = params[i] || '-';
+    }
+    var card_font_size_class = card_size_class(card_data, options);
+
+    var result = "";
+    result += '<table class="card-stats card-stats-dhthresholds' + card_font_size_class + '">';
+    result += '    <tbody><tr>';
+    result += '      <th class="card-stats-header">Minor</th>';
+    result += '      <td class="card-stats-cell">' + stats[0] + ' →</td>';
+    result += '      <th class="card-stats-header">Major</th>';
+    result += '      <td class="card-stats-cell">' + stats[1] + ' →</td>';
+    result += '      <th class="card-stats-header">Severe</th>';
+    result += '    </tr>';
+    result += '      <td class="card-stats-cell small">1 HP</td>';
+    result += '      <td class="card-stats-cell"></td>';
+    result += '      <td class="card-stats-cell small">2 HP</td>';
+    result += '      <td class="card-stats-cell"></td>';
+    result += '      <td class="card-stats-cell small">3 HP</td>';
+    result += '    </tr>';
+    result += '  </tbody>';
+    result += '</table>';
+    return result;
+}
+
+function card_element_dhstats(params, card_data, options) {
+    var stats = [];
+    for (var i = 0; i < 6; ++i) {
+        stats[i] = params[i] || '-';
+    }
+    var card_font_size_class = card_size_class(card_data, options);
+
+    var result = "";
+    result += '<table class="card-stats card-stats-dh-derived' + card_font_size_class + '">';
+    result += '    <tbody><tr>';
+    result += '      <th class="card-stats-header">Agility</th>';
+    result += '      <td class="card-stats-cell">' + stats[0] + '</td>';
+    result += '      <th class="card-stats-header">Strength</th>';
+    result += '      <td class="card-stats-cell">' + stats[1] + '</td>';
+    result += '      <th class="card-stats-header">Finesse</th>';
+    result += '      <td class="card-stats-cell">' + stats[2] + '</td>';
+    result += '    </tr>';
+    result += '      <th class="card-stats-header">Instinct</th>';
+    result += '      <td class="card-stats-cell">' + stats[3] + '</td>';
+    result += '      <th class="card-stats-header">Presence</th>';
+    result += '      <td class="card-stats-cell">' + stats[4] + '</td>';
+    result += '      <th class="card-stats-header">Knowledge</th>';
+    result += '      <td class="card-stats-cell">' + stats[5] + '</td>';
+    result += '    </tr>';
+    result += '  </tbody>';
+    result += '</table>';
+    return result;
+}
+
 function card_element_dndstats(params, card_data, options) {
     var stats = [10, 10, 10, 10, 10, 10];
     var mods = [0,0,0,0,0,0];
@@ -429,6 +485,8 @@ var card_element_generators = {
     ruler: card_element_ruler,
     boxes: card_element_boxes,
     description: card_element_description,
+    dhstats: card_element_dhstats,
+    dhthresholds: card_element_dhthresholds,
     dndstats: card_element_dndstats,
     swstats: card_element_swstats,
     text: card_element_text,

@@ -281,6 +281,20 @@
     padding: 0;
 }
 
+.card-stats-dh-derived .card-stats-header {
+    text-align:left;
+    padding-right: .3em;
+}
+
+.card-stats-dh-derived .card-stats-cell {
+    text-align:left;
+}
+
+.card-stats-dhthresholds td,
+.card-stats-dhthresholds th {
+    width: 20%;
+}
+
 .card-bullet-line {
     color: black;
     padding-left: 16px;
