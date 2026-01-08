@@ -274,6 +274,16 @@ function card_element_text(params, card_data, options) {
     return result;
 }
 
+function card_element_italics(params, card_data, options) {
+    var element_class = card_element_class(card_data, options);
+
+    var result = "";
+    result += '<div class="' + element_class + '">';
+    result += '   <p class="card-p card-description-text"><i>' + params[0] + '</i></p>';
+    result += '</div>';
+    return result;
+}
+
 function card_element_center(params, card_data, options) {
     var element_class = card_element_class(card_data, options);
 
@@ -505,6 +515,7 @@ var card_element_generators = {
     action: card_element_feature_action,
     propertycolumns: card_element_property_columns,
     pf_action: card_element_pf_action,
+    source: card_element_italics,
 };
 
 // ============================================================================
@@ -513,22 +524,37 @@ var card_element_generators = {
 
 function card_generate_contents(contents, card_data, options, isFront) {
     var result = "";
-   
+    var has_fill_element = false
+    var has_source_element = false
     var html = contents.map(function (value) {
         var parts = card_data_split_params(value);
         var element_name = parts[0];
         var element_params = parts.splice(1);
         var element_generator = card_element_generators[element_name];
+        
+        if (element_name == "fill") has_fill_element = true
+        has_source_element = (element_name == "source") // only the last element counts for this
+
         if (element_generator) {
-            return element_generator(element_params, card_data, options);
+            var element_value = ""
+            if (has_source_element) {
+                element_value += card_element_fill(["1"], card_data, options);
+                has_fill_element = true
+            }
+            element_value += element_generator(element_params, card_data, options);
+            return element_value
         } else if (element_name.length > 0) {
             return card_element_unknown(element_params, card_data, options);
         }
     }).join("\n");
 
     if (card_data.include_text_on_back && isFront) {
-        html += "\n" + card_element_fill("", card_data, options);
-        html += "\n" + card_element_right("→", card_data, options);
+        var card_font_size_class = card_size_class(card_data, options);
+        var fill_class = has_source_element || has_fill_element ? "" : " card-fill"
+        var card_style = has_source_element ? " style='margin-top: -1.3em;'" : ""
+        html += `\n<span class="card-text-on-back-line${card_font_size_class}${fill_class}"${card_style}>`
+        html += "→"
+        html += "</span>"
     }
 
     var tagNames = ['icon'];

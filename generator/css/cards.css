@@ -221,7 +221,14 @@
 
 }
 
-.card-fill {flex:1;}
+.card-fill {
+    flex:1;
+}
+
+.card-text-on-back-line {
+    align-content: end;
+    text-align: right;
+}
 
 .card-description-line {
     margin-top: 0.5em;
